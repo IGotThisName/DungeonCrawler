@@ -36,7 +36,7 @@ public final class DungeonCrawler extends JavaPlugin {
             profileManager.InitialisePlayer(player);
         }
 
-        Utils.showComponentInv(Bukkit.getPlayer("olmic"));
+        // Utils.showComponentInv(Bukkit.getPlayer("olmic"));
     }
 
     @Override

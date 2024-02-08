@@ -60,7 +60,7 @@ public class ProfileManager implements EventListener {
                 }
             }
         }
-        
+
         playerProfiles.put(player, profile);
     }
 

@@ -1,6 +1,7 @@
 package olmic.dungeoncrawler.items.components;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import olmic.dungeoncrawler.util.Keys;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -46,13 +47,13 @@ public class ItemComponent {
 
         List<Component> lore = new ArrayList<>();
 
-
         // for each effect
         for (int i = 0; i < effects.size(); i++) {
 
             // set up
             ComponentEffect effect = effects.get(i);
-            String effectDesc = "";
+            String effectDesc1 = "";
+            String effectDesc2 = "";
             String directionString = "";
 
             for (int n = 0; n < effect.getDirections().size() - 1; n++) {
@@ -61,10 +62,12 @@ public class ItemComponent {
 
             directionString += effect.getDirections().get(effect.getDirections().size()-1).descName;
 
-            effectDesc += "Components " + directionString + " gain " + effect.getValue() + "% " + effect.getStat().getString();
+            effectDesc1 += directionString + " gain:";
+            effectDesc2 += effect.getValue() + "% " + effect.getStat().string;
 
             // add to list
-            lore.add(Component.text(effectDesc));
+            lore.add(Component.text(effectDesc1).decoration(TextDecoration.ITALIC, false));
+            lore.add(Component.text(effectDesc2).decoration(TextDecoration.ITALIC, false));
         }
 
         lore.add(Component.text(""));
@@ -78,27 +81,27 @@ public class ItemComponent {
 
         // above slot
         if (directions.contains(Direction.UP)) {
-            lore.add(Component.text("  §e■"));
+            lore.add(Component.text("     §e■").decoration(TextDecoration.ITALIC, false));
         } else  {
-            lore.add(Component.text("  §e□"));
+            lore.add(Component.text("     §e□").decoration(TextDecoration.ITALIC, false));
         }
 
         // left and right slot
         if (directions.contains(Direction.LEFT) && directions.contains(Direction.RIGHT)) {
-            lore.add(Component.text("§e■§6■§e■"));
+            lore.add(Component.text("  ").decoration(TextDecoration.BOLD, true).append(Component.text("§e■ §6■ §e■").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)));
         } else if (directions.contains(Direction.LEFT) && !directions.contains(Direction.RIGHT)) {
-            lore.add(Component.text("§e■§6■§e□"));
+            lore.add(Component.text("  ").decoration(TextDecoration.BOLD, true).append(Component.text("§e■ §6■ §e□").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)));
         } else if (!directions.contains(Direction.LEFT) && directions.contains(Direction.RIGHT)) {
-            lore.add(Component.text("§e□§6■§e■"));
+            lore.add(Component.text("  ").decoration(TextDecoration.BOLD, true).append(Component.text("§e□ §6■ §e■").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)));
         } else {
-            lore.add(Component.text("§e□§6■§e□"));
+            lore.add(Component.text("  ").decoration(TextDecoration.BOLD, true).append(Component.text("§e□ §6■ §e□").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)));
         }
 
         // below slot
         if (directions.contains(Direction.DOWN)) {
-            lore.add(Component.text("  §e■"));
+            lore.add(Component.text("     §e■").decoration(TextDecoration.ITALIC, false));
         } else  {
-            lore.add(Component.text("  §e□"));
+            lore.add(Component.text("     §e□").decoration(TextDecoration.ITALIC, false));
         }
 
         return lore;

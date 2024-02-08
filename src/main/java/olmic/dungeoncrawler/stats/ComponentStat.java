@@ -7,14 +7,9 @@ public enum ComponentStat {
     RangedDamageMulti("Ranged Damage Multiplier"),
     MagicDamageMulti("Magic Damage Multiplier");
 
-    private String string;
+    public final String string;
 
     ComponentStat(String string) {
         this.string = string;
     }
-
-    public String getString() {
-        return string;
-    }
-
 }

@@ -1,15 +1,12 @@
 package olmic.dungeoncrawler;
 
-import olmic.dungeoncrawler.items.ItemManager;
+import olmic.dungeoncrawler.items.items.ItemManager;
 import olmic.dungeoncrawler.items.components.ComponentManager;
 import olmic.dungeoncrawler.stats.ProfileManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.util.HashMap;
 
 public final class DungeonCrawler extends JavaPlugin {
 
@@ -29,7 +26,7 @@ public final class DungeonCrawler extends JavaPlugin {
         itemManager.LoadItems();
 
         componentManager = new ComponentManager(this);
-
+        componentManager.LoadComponents();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             profileManager.InitialisePlayer(player);
@@ -41,5 +38,6 @@ public final class DungeonCrawler extends JavaPlugin {
         // Plugin shutdown logic
 
         itemManager.SaveItems();
+        componentManager.SaveComponents();
     }
 }

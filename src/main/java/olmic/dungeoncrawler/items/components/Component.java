@@ -10,9 +10,9 @@ public class Component {
     // all are required
     private Material material;
     private String name;
-    private HashMap<ComponentEffect, Direction[]> effects;
+    private List<ComponentEffect> effects;
 
-    Component(Material material, String name, HashMap<ComponentEffect, Direction[]> effects) {
+    Component(Material material, String name, List<ComponentEffect> effects) {
         this.material = material;
         this.name = name;
         this.effects = effects;

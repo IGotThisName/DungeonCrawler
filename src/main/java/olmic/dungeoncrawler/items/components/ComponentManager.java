@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ComponentManager {
 
-    public HashMap<String, Component> components;
+    public HashMap<String, ItemComponent> components;
     private DungeonCrawler dungeonCrawler;
 
     private File configFile;
@@ -65,28 +65,18 @@ public class ComponentManager {
                 // build and add effect
                 ComponentEffect effect = new ComponentEffect(stat, value, directions);
                 effects.add(effect);
-
-                Bukkit.getLogger().info("Loaded Effect in Component: " + key);
             }
 
-            Component component = new Component(material, name, effects);
+            ItemComponent itemComponent = new ItemComponent(material, name, effects, key);
 
-            List<String> lore = component.buildDescription();
-
-            for (int i = 0; i < lore.size(); i++) {
-
-                Bukkit.getLogger().info(lore.get(i));
-
-            }
-
-            components.put(key, component);
+            components.put(key, itemComponent);
             Bukkit.getLogger().info("Loaded Component");
         }
     }
 
     public void SaveComponents() {
         for (String key : components.keySet()) {
-            Component component = components.get(key);
+            ItemComponent itemComponent = components.get(key);
 
             // for each component
         }

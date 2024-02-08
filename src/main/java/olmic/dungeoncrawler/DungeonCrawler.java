@@ -3,6 +3,8 @@ package olmic.dungeoncrawler;
 import olmic.dungeoncrawler.items.items.ItemManager;
 import olmic.dungeoncrawler.items.components.ComponentManager;
 import olmic.dungeoncrawler.stats.ProfileManager;
+import olmic.dungeoncrawler.util.Keys;
+import olmic.dungeoncrawler.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -13,7 +15,9 @@ public final class DungeonCrawler extends JavaPlugin {
     public static Plugin plugin;
 
     private ItemManager itemManager;
-    private ComponentManager componentManager;
+    public static ComponentManager componentManager;
+
+    public Keys keys;
 
     @Override
     public void onEnable() {
@@ -31,6 +35,8 @@ public final class DungeonCrawler extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             profileManager.InitialisePlayer(player);
         }
+
+        Utils.showComponentInv(Bukkit.getPlayer("olmic"));
     }
 
     @Override

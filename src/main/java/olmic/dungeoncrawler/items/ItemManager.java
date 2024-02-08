@@ -2,9 +2,11 @@ package olmic.dungeoncrawler.items;
 
 
 import olmic.dungeoncrawler.DungeonCrawler;
-import org.bukkit.Bukkit;
+import olmic.dungeoncrawler.stats.PlayerStat;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,10 +22,10 @@ public class ItemManager {
 
     public ItemManager(DungeonCrawler dungeonCrawler) {
         this.dungeonCrawler = dungeonCrawler;
-        items = new HashMap<String, Item>();
+        items = new HashMap<>();
     }
 
-    public static void saveCustomYml(FileConfiguration ymlConfig, File ymlFile) {
+    private static void saveCustomYml(FileConfiguration ymlConfig, File ymlFile) {
         try {
             ymlConfig.save(ymlFile);
         } catch (IOException e) {
@@ -37,19 +39,44 @@ public class ItemManager {
         config = YamlConfiguration.loadConfiguration(configFile);
 
         for (String key : config.getKeys(false)) {
+            // item type (required)
+            Material type = (Material) config.get(key + ".type");
 
+            // item name (required)
+            String name = (String) config.get(key + ".name");
 
+            // load stats
+            HashMap<PlayerStat, Double> stats = new HashMap<PlayerStat, Double>();
+            for (PlayerStat stat : PlayerStat.values()) {
 
+                String statPath = key + "." + stat.toString();
+
+                if (config.contains(statPath)) {
+                    stats.put(stat, config.getDouble(statPath));
+                }
+            }
+
+            Item item = new Item(type, name, stats);
+
+            items.put(key, item);
         }
-
     }
 
     public void SaveItems() {
         for (String key : items.keySet()) {
+            Item item = items.get(key);
 
+            // set type
+            config.set(key + ".type", item.getMaterial());
+
+            // set name
+            config.set(key + ".name", item.getName());
+
+            // set stats
+            for (PlayerStat stat : item.getStats().keySet()) {
+                config.set(key + "." + stat.toString(), item.getStats().get(stat));
+            }
         }
-
-        config.set("test", "test2");
 
         saveCustomYml(config, configFile);
     }

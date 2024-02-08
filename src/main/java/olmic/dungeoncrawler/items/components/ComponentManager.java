@@ -2,6 +2,7 @@ package olmic.dungeoncrawler.items.components;
 
 import olmic.dungeoncrawler.DungeonCrawler;
 import olmic.dungeoncrawler.stats.ComponentStat;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -42,7 +43,7 @@ public class ComponentManager {
             // get name
             String name = config.getString(key + ".name");
             // get material
-            Material material = (Material) config.get(key + ".material");
+            Material material = Material.getMaterial(config.getString(key + ".material"));
             // load component effects
             List<ComponentEffect> effects = new ArrayList<>();
 
@@ -54,12 +55,32 @@ public class ComponentManager {
                 // effect value
                 Double value = config.getDouble(effectPath + ".value");
                 // get directions
-                List<Direction> directions = (List<Direction>) config.getList(effectPath + ".direction");
+                List<String> directionsStrings = config.getStringList(effectPath + ".direction");
+                ArrayList<Direction> directions = new ArrayList<>();
+
+                for (int i = 0; i < directionsStrings.size(); i++) {
+                    directions.add(Direction.valueOf(directionsStrings.get(i)));
+                }
 
                 // build and add effect
                 ComponentEffect effect = new ComponentEffect(stat, value, directions);
                 effects.add(effect);
+
+                Bukkit.getLogger().info("Loaded Effect in Component: " + key);
             }
+
+            Component component = new Component(material, name, effects);
+
+            List<String> lore = component.buildDescription();
+
+            for (int i = 0; i < lore.size(); i++) {
+
+                Bukkit.getLogger().info(lore.get(i));
+
+            }
+
+            components.put(key, component);
+            Bukkit.getLogger().info("Loaded Component");
         }
     }
 

@@ -2,19 +2,19 @@ package olmic.dungeoncrawler.items.components;
 
 import olmic.dungeoncrawler.stats.ComponentStat;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ComponentEffect {
 
     private ComponentStat stat;
     private Double value;
-    private List<Direction> direction;
+    private ArrayList<Direction> directions;
 
-    ComponentEffect(ComponentStat stat, Double value, List<Direction> direction) {
+    ComponentEffect(ComponentStat stat, Double value, ArrayList<Direction> directions) {
         this.stat = stat;
         this.value = value;
-        this.direction = direction;
+        this.directions = directions;
     }
 
     public ComponentStat getStat() {
@@ -29,11 +29,11 @@ public class ComponentEffect {
     public void setValue(Double value) {
         this.value = value;
     }
-    public List<Direction> getDirection() {
-        return direction;
+    public List<Direction> getDirections() {
+        return directions;
     }
-    public void setDirection(List<Direction> direction) {
-        this.direction = direction;
+    public void setDirections(ArrayList<Direction> directions) {
+        this.directions = directions;
     }
 
 

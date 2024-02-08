@@ -2,9 +2,19 @@ package olmic.dungeoncrawler.stats;
 
 public enum ComponentStat {
 
-    CooldownMultiplier,
-    MeleeDamageMultiplier,
-    RangedDamageMultiplier,
-    MagicDamageMultiplier
+    CooldownMulti("Cooldown Multiplier"),
+    MeleeDamageMulti("Melee Damage Multiplier"),
+    RangedDamageMulti("Ranged Damage Multiplier"),
+    MagicDamageMulti("Magic Damage Multiplier");
+
+    private String string;
+
+    ComponentStat(String string) {
+        this.string = string;
+    }
+
+    public String getString() {
+        return string;
+    }
 
 }

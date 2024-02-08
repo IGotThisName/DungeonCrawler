@@ -37,7 +37,7 @@ public final class DungeonCrawler extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
 
-        itemManager.SaveItems();
-        componentManager.SaveComponents();
+        // itemManager.SaveItems();
+        // componentManager.SaveComponents();
     }
 }

@@ -1,4 +1,4 @@
-package olmic.dungeoncrawler.items;
+package olmic.dungeoncrawler.items.items;
 
 import olmic.dungeoncrawler.stats.PlayerStat;
 import org.bukkit.Material;

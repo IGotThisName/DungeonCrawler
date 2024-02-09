@@ -1,5 +1,6 @@
 package olmic.dungeoncrawler.items.items;
 
+import net.kyori.adventure.text.Component;
 import olmic.dungeoncrawler.items.components.ItemComponent;
 import olmic.dungeoncrawler.items.skills.Skill;
 import olmic.dungeoncrawler.stats.PlayerStat;
@@ -7,6 +8,7 @@ import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Item {
 

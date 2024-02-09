@@ -3,13 +3,16 @@ package olmic.dungeoncrawler.commands;
 import olmic.dungeoncrawler.DungeonCrawler;
 import olmic.dungeoncrawler.items.items.Item;
 import olmic.dungeoncrawler.items.items.ItemManager;
+import olmic.dungeoncrawler.util.NBTutil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -58,8 +61,12 @@ public class GiveBlankItem implements CommandExecutor {
         itemManager.items.put(uuid, blankItem);
 
         ItemStack newItem = new ItemStack(type);
-        // net.minecraft.server.v1_8_R1.ItemStack stack = CraftItemStack.asNMSCopy(newItem);
+        ItemMeta meta = newItem.getItemMeta();
 
+        // set tag
+        newItem = NBTutil.setNBT(newItem, "customItem", uuid);
+        // give item
+        player.getInventory().addItem(newItem);
 
         return true;
     }

@@ -1,5 +1,6 @@
 package olmic.dungeoncrawler;
 
+import olmic.dungeoncrawler.commands.GiveBlankItem;
 import olmic.dungeoncrawler.items.items.ItemManager;
 import olmic.dungeoncrawler.items.components.ComponentManager;
 import olmic.dungeoncrawler.stats.ProfileManager;
@@ -14,7 +15,7 @@ public final class DungeonCrawler extends JavaPlugin {
 
     public static Plugin plugin;
 
-    private ItemManager itemManager;
+    public static ItemManager itemManager;
     public static ComponentManager componentManager;
 
     public Keys keys;
@@ -27,10 +28,13 @@ public final class DungeonCrawler extends JavaPlugin {
 
         ProfileManager profileManager = new ProfileManager();
         itemManager = new ItemManager(this);
-        itemManager.LoadItems();
+        // itemManager.LoadItems();
 
         componentManager = new ComponentManager(this);
         componentManager.LoadComponents();
+
+        // register commands
+        getCommand("giveBlankItem").setExecutor(new GiveBlankItem());
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             profileManager.InitialisePlayer(player);

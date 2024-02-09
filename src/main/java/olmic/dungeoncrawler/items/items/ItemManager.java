@@ -16,15 +16,17 @@ public class ItemManager {
     public HashMap<String, Item> items;
     private DungeonCrawler dungeonCrawler;
 
-    private File configFile;
-    private FileConfiguration config;
+    // private File configFile;
+    // private FileConfiguration config;
+
+
 
     public ItemManager(DungeonCrawler dungeonCrawler) {
         this.dungeonCrawler = dungeonCrawler;
-        items = new HashMap<>();
+        // items = new HashMap<>();
     }
 
-    private static void saveCustomYml(FileConfiguration ymlConfig, File ymlFile) {
+    /* private static void saveCustomYml(FileConfiguration ymlConfig, File ymlFile) {
         try {
             ymlConfig.save(ymlFile);
         } catch (IOException e) {
@@ -78,5 +80,5 @@ public class ItemManager {
         }
 
         saveCustomYml(config, configFile);
-    }
+    } */
 }

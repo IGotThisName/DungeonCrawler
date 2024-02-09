@@ -4,3 +4,6 @@ main: olmic.dungeoncrawler.DungeonCrawler
 api-version: '1.20'
 authors: [olmic]
 description: dungeon crawler server plugin
+commands:
+  giveBlankItem:
+    description: give a new item from presets

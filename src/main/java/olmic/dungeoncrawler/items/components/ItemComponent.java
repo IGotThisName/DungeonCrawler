@@ -11,10 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class ItemComponent {
 
@@ -38,7 +35,7 @@ public class ItemComponent {
         ItemStack item = new ItemStack(material);
         ItemMeta itemMeta = item.getItemMeta();
 
-        itemMeta.displayName(Component.text(name));
+        itemMeta.displayName(Component.text(name).decoration(TextDecoration.ITALIC, false));
         itemMeta.lore(buildDescription());
         itemMeta.getPersistentDataContainer().set(Keys.componentKey, PersistentDataType.STRING, key);
 
@@ -48,11 +45,19 @@ public class ItemComponent {
 
     public List<Component> buildDescription() {
 
-        ArrayList<TextColor> colors = new ArrayList<>();
-        colors.add(TextColor.color(255, 255, 0));
-        colors.add(TextColor.color(0, 255, 0));
-        colors.add(TextColor.color(0, 255, 255));
-        colors.add(TextColor.color(0, 0, 255));
+        List<TextColor> goodColors = Arrays.asList(new TextColor[]{
+                TextColor.color(255, 255, 0),
+                TextColor.color(0, 255, 0),
+                TextColor.color(0, 255, 255),
+                TextColor.color(0, 0, 255)
+        });
+
+        List<TextColor> badColors = Arrays.asList(new TextColor[]{
+                TextColor.color(82, 0, 33),
+                TextColor.color(105, 0, 0),
+                TextColor.color(96, 16, 0),
+                TextColor.color(111, 66, 0)
+        });
 
         // defaults
         HashMap<Direction, TextComponent> directions = new HashMap<>();
@@ -65,33 +70,27 @@ public class ItemComponent {
 
         // for each effect
         for (int i = 0; i < effects.size(); i++) {
-
-            /*
-            // set up
-            ComponentEffect effect = effects.get(i);
-            String effectDesc1 = "";
-            String effectDesc2 = "";
-            String directionString = "";
-
-            for (int n = 0; n < effect.getDirections().size() - 1; n++) {
-                directionString += effect.getDirections().get(n).descName + " and ";
-            }
-
-            directionString += effect.getDirections().get(effect.getDirections().size()-1).descName;
-
-            effectDesc1 += directionString + " gain:"; */
             ComponentEffect effect = effects.get(i);
             String effectDesc2 = "";
-            effectDesc2 += effect.getValue() + "% " + effect.getStat().string;
+            effectDesc2 += effect.getTextValue() + " " + effect.getStat().string;
 
             // add to list
-            // lore.add(Component.text(effectDesc1).decoration(TextDecoration.ITALIC, false).color(colors.get(i)));
-            lore.add(Component.text(effectDesc2).decoration(TextDecoration.ITALIC, false).color(colors.get(i)));
+            TextColor chosenColor = null;
+
+            if (effect.getValue() >= 0) {
+                // good color
+                chosenColor = goodColors.get(i);
+            } else {
+                // bad color
+                chosenColor = badColors.get(i);
+            }
+
+            lore.add(Component.text(effectDesc2).decoration(TextDecoration.ITALIC, false).color(chosenColor));
 
             // set direction chars
             for (int n = 0; n < effect.getDirections().size(); n++) {
                 directions.put(effect.getDirections().get(n),
-                        Component.text("■").color(colors.get(i)).decoration(TextDecoration.BOLD, false));
+                        Component.text("■").color(chosenColor).decoration(TextDecoration.BOLD, false));
             }
         }
 
@@ -106,33 +105,6 @@ public class ItemComponent {
                 .decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text("     ")
                 .append(directions.get(Direction.DOWN)).decoration(TextDecoration.ITALIC, false));
-
-        /*
-        // above slot
-        if (directions.contains(Direction.UP)) {
-            lore.add(Component.text("     §e■").decoration(TextDecoration.ITALIC, false));
-        } else  {
-            lore.add(Component.text("     §e□").decoration(TextDecoration.ITALIC, false));
-        }
-
-        // left and right slot
-        if (directions.contains(Direction.LEFT) && directions.contains(Direction.RIGHT)) {
-            lore.add(Component.text("  ").decoration(TextDecoration.BOLD, true).append(Component.text("§e■ §6■ §e■").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)));
-        } else if (directions.contains(Direction.LEFT) && !directions.contains(Direction.RIGHT)) {
-            lore.add(Component.text("  ").decoration(TextDecoration.BOLD, true).append(Component.text("§e■ §6■ §e□").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)));
-        } else if (!directions.contains(Direction.LEFT) && directions.contains(Direction.RIGHT)) {
-            lore.add(Component.text("  ").decoration(TextDecoration.BOLD, true).append(Component.text("§e□ §6■ §e■").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)));
-        } else {
-            lore.add(Component.text("  ").decoration(TextDecoration.BOLD, true).append(Component.text("§e□ §6■ §e□").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)));
-        }
-
-        // below slot
-        if (directions.contains(Direction.DOWN)) {
-            lore.add(Component.text("     §e■").decoration(TextDecoration.ITALIC, false));
-        } else  {
-            lore.add(Component.text("     §e□").decoration(TextDecoration.ITALIC, false));
-        }
-        */
 
         return lore;
     }

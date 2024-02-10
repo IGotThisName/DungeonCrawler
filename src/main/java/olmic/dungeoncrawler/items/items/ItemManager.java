@@ -23,7 +23,7 @@ public class ItemManager {
 
     public ItemManager(DungeonCrawler dungeonCrawler) {
         this.dungeonCrawler = dungeonCrawler;
-        // items = new HashMap<>();
+        items = new HashMap<>();
     }
 
     /* private static void saveCustomYml(FileConfiguration ymlConfig, File ymlFile) {

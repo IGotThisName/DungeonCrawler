@@ -1,10 +1,15 @@
 package olmic.dungeoncrawler.items.items;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextDecoration;
 import olmic.dungeoncrawler.items.components.ItemComponent;
 import olmic.dungeoncrawler.items.skills.Skill;
 import olmic.dungeoncrawler.stats.PlayerStat;
+import olmic.dungeoncrawler.util.NBTutil;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,11 +21,13 @@ public class Item {
     private String name;
     private HashMap<PlayerStat, Double> stats;
     private ArrayList<String> components;
+    private String uuid;
 
-    Item(Material material, String name, ArrayList<String> components) {
+    public Item(Material material, String name, ArrayList<String> components, String uuid) {
         this.material = material;
         this.name = name;
         this.components = components;
+        this.uuid = uuid;
     }
 
     public Material getMaterial() {
@@ -39,7 +46,11 @@ public class Item {
         return stats;
     }
 
-    public static Item createEmpty(Material material, String name) {
+    public String getSlotKey(int index) {
+        return components.get(index);
+    }
+
+    public static Item createEmpty(Material material, String name, String uuid) {
 
         ArrayList<String> components = new ArrayList<>();
 
@@ -51,6 +62,74 @@ public class Item {
             }
         }
 
-        return new Item(material, name, components);
+        return new Item(material, name, components, uuid);
+    }
+
+    private enum ComponentChar {
+
+        COMPONENT("§e■"),
+        CORE("§6■"),
+        EMPTY("§7□");
+
+        private String character;
+
+        ComponentChar(String character) {
+            this.character = character;
+        }
+    }
+
+    private List<Component> createDescription() {
+        List<Component> description = new ArrayList<>();
+
+        // cycle through 5 times making a new component for each
+        // in each component cycle through 5 times adding the character
+
+        for (int line = 1; line <= 5; line++) {
+
+            TextComponent component = Component.text("");
+
+            for (int i = 0; i < 5; i++) {
+
+                int num = i + (line - 1) * 5;
+
+                switch(components.get(num)) {
+
+                    case "empty":
+                        component = component.append(Component.text("§7□ ").decoration(TextDecoration.ITALIC, false));
+                        break;
+                    case "core":
+                        component = component.append(Component.text("§6■ ").decoration(TextDecoration.ITALIC, false));
+                        break;
+                    case "component":
+                        component = component.append(Component.text("§e■ ").decoration(TextDecoration.ITALIC, false));
+                        break;
+                }
+
+            }
+
+            description.add(component);
+        }
+
+        return description;
+    }
+
+    public ItemStack getItemStack() {
+        ItemStack newItem = new ItemStack(material);
+        ItemMeta meta = newItem.getItemMeta();
+
+        // modify meta
+        meta.lore(createDescription());
+        meta.displayName(Component.text(name).decoration(TextDecoration.ITALIC, false));
+
+        // set item meta
+        newItem.setItemMeta(meta);
+        // set tags
+        newItem = NBTutil.setNBT(newItem, "customItem", uuid);
+
+        for (int i = 0; i < 25; i++) {
+            newItem = NBTutil.setNBT(newItem, String.valueOf(i), components.get(i));
+        }
+
+        return newItem;
     }
 }

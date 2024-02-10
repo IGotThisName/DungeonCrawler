@@ -1,5 +1,7 @@
 package olmic.dungeoncrawler.commands;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import olmic.dungeoncrawler.DungeonCrawler;
 import olmic.dungeoncrawler.items.items.Item;
 import olmic.dungeoncrawler.items.items.ItemManager;
@@ -56,15 +58,25 @@ public class GiveBlankItem implements CommandExecutor {
         }
         name += args[args.length-1];
 
-        Item blankItem = Item.createEmpty(type, name);
-
+        Item blankItem = Item.createEmpty(type, name, uuid);
         itemManager.items.put(uuid, blankItem);
+        ItemStack newItem = blankItem.getItemStack();
 
-        ItemStack newItem = new ItemStack(type);
+        /* ItemStack newItem = new ItemStack(type);
         ItemMeta meta = newItem.getItemMeta();
 
-        // set tag
+        // modify meta
+        meta.lore(Item.createDescription(blankItem));
+        meta.displayName(Component.text(name).decoration(TextDecoration.ITALIC, false));
+
+        // set item meta
+        newItem.setItemMeta(meta);
+        // set tags
         newItem = NBTutil.setNBT(newItem, "customItem", uuid);
+
+        for (int i = 0; i < 25; i++) {
+            newItem = NBTutil.setNBT(newItem, String.valueOf(i), blankItem.getSlotKey(i));
+        } */
         // give item
         player.getInventory().addItem(newItem);
 

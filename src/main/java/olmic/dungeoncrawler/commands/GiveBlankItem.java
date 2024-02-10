@@ -48,7 +48,7 @@ public class GiveBlankItem implements CommandExecutor {
         }
 
         // return if too short
-        if (args.length <= 2) {
+        if (args.length < 2) {
             sender.sendMessage("no item name");
             return false;
         }

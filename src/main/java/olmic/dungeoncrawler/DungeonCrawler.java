@@ -1,6 +1,8 @@
 package olmic.dungeoncrawler;
 
 import olmic.dungeoncrawler.commands.GiveBlankItem;
+import olmic.dungeoncrawler.commands.OpenEditItemGUI;
+import olmic.dungeoncrawler.items.ItemEditor;
 import olmic.dungeoncrawler.items.items.ItemManager;
 import olmic.dungeoncrawler.items.components.ComponentManager;
 import olmic.dungeoncrawler.stats.ProfileManager;
@@ -35,10 +37,21 @@ public final class DungeonCrawler extends JavaPlugin {
 
         // register commands
         getCommand("giveBlankItem").setExecutor(new GiveBlankItem());
+        getCommand("openEditItemGUI").setExecutor(new OpenEditItemGUI());
+
+        // register events
+        getServer().getPluginManager().registerEvents(new ItemEditor(), this);
+        getServer().getPluginManager().registerEvents(new ProfileManager(), this);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             profileManager.InitialisePlayer(player);
+
+            for (String key : itemManager.items.keySet()) {
+                player.sendMessage(key);
+            }
         }
+
+
 
         // Utils.showComponentInv(Bukkit.getPlayer("olmic"));
     }

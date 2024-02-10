@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.HashMap;
 
-public class ProfileManager implements EventListener {
+public class ProfileManager implements Listener {
 
     public HashMap<Player, PlayerProfile> playerProfiles;
 
@@ -49,7 +50,7 @@ public class ProfileManager implements EventListener {
                 // components
                 for (String key : components.keySet()) {
                     try {
-                        if (itemMeta.getPersistentDataContainer().get(Keys.componentKey, PersistentDataType.STRING).equalsIgnoreCase(key)) {
+                        if (NBTutil.getNBT(item, "component").equals(key)) {
 
                             playerInv.setItem(i, components.get(key).getItemStack());
 

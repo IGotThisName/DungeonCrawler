@@ -7,3 +7,5 @@ description: dungeon crawler server plugin
 commands:
   giveBlankItem:
     description: give a new item from presets
+  openEditItemGUI:
+    description: open the item editor

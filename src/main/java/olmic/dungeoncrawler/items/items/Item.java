@@ -49,6 +49,9 @@ public class Item {
     public String getSlotKey(int index) {
         return components.get(index);
     }
+    public void setSlotKey(int index, String key) {
+        components.set(index, key);
+    }
 
     public static Item createEmpty(Material material, String name, String uuid) {
 
@@ -100,7 +103,7 @@ public class Item {
                     case "core":
                         component = component.append(Component.text("§6■ ").decoration(TextDecoration.ITALIC, false));
                         break;
-                    case "component":
+                    default:
                         component = component.append(Component.text("§e■ ").decoration(TextDecoration.ITALIC, false));
                         break;
                 }

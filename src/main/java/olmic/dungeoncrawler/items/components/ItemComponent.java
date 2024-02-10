@@ -5,6 +5,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import olmic.dungeoncrawler.util.Keys;
+import olmic.dungeoncrawler.util.NBTutil;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -21,8 +22,6 @@ public class ItemComponent {
     private List<ComponentEffect> effects;
     private String key;
 
-
-
     ItemComponent(Material material, String name, List<ComponentEffect> effects, String key) {
         this.material = material;
         this.name = name;
@@ -37,9 +36,9 @@ public class ItemComponent {
 
         itemMeta.displayName(Component.text(name).decoration(TextDecoration.ITALIC, false));
         itemMeta.lore(buildDescription());
-        itemMeta.getPersistentDataContainer().set(Keys.componentKey, PersistentDataType.STRING, key);
 
         item.setItemMeta(itemMeta);
+        item = NBTutil.setNBT(item, "component", key);
         return item;
     }
 

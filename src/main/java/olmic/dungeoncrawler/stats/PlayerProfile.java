@@ -16,8 +16,12 @@ public class PlayerProfile {
     }
 
     public void addStat(Stat stat, Double value) {
-        double old = stats.get(stat);
-        stats.put(stat, old + value);
+        if (!stats.containsKey(stat)) {
+            stats.put(stat, value);
+        } else {
+            double old = stats.get(stat);
+            stats.put(stat, old + value);
+        }
     }
 
     public void setStat(Stat stat, Double value) {

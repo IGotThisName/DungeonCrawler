@@ -10,6 +10,7 @@ public class ComponentEffect {
     private Stat stat;
     private Double value;
     private ArrayList<Direction> directions;
+
     private Operation operation;
 
     ComponentEffect(Stat stat, Double value, ArrayList<Direction> directions, Operation operation) {
@@ -52,6 +53,9 @@ public class ComponentEffect {
     }
     public void setDirections(ArrayList<Direction> directions) {
         this.directions = directions;
+    }
+    public Operation getOperation() {
+        return operation;
     }
 
 

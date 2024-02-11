@@ -4,13 +4,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextDecoration;
 import olmic.dungeoncrawler.DungeonCrawler;
-import olmic.dungeoncrawler.items.components.ComponentEffect;
-import olmic.dungeoncrawler.items.components.ComponentManager;
-import olmic.dungeoncrawler.items.components.Direction;
-import olmic.dungeoncrawler.items.components.ItemComponent;
+import olmic.dungeoncrawler.items.components.*;
 import olmic.dungeoncrawler.stats.Stat;
 import olmic.dungeoncrawler.util.NBTutil;
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -36,6 +34,10 @@ public class Item {
         this.name = name;
         this.components = components;
         this.uuid = uuid;
+
+        stats = new HashMap<>();
+
+        updateStats();
     }
 
     public Material getMaterial() {
@@ -60,7 +62,19 @@ public class Item {
     public void setSlotKey(int index, String key) {
         components.set(index, key);
     }
+
+    private void addStat(Stat stat, Double value) {
+        if (!stats.containsKey(stat)) {
+            stats.put(stat, value);
+        } else {
+            double old = stats.get(stat);
+            stats.put(stat, old + value);
+        }
+    }
+
     public void updateStats() {
+
+        stats.clear();
 
         for (int i = 0; i < components.size(); i++) {
             String componentKey = components.get(i);
@@ -98,10 +112,50 @@ public class Item {
                     }
                 }
 
-                // add to stats list
+                // add to stats
+                HashMap<Stat, Double> baseStats = new HashMap<>();
+                HashMap<Stat, Double> statMulti = new HashMap<>();
 
+                for (ComponentEffect effect : appliedEffects) {
 
+                    Stat stat = effect.getStat();
+                    Double value = effect.getValue();
+
+                    if (effect.getOperation() == Operation.ADD){
+                        if (!baseStats.containsKey(stat)) {
+                            baseStats.put(stat, value);
+                        } else {
+                            double old = baseStats.get(stat);
+                            baseStats.put(stat, old + value);
+                        }
+                    } else {
+                        if (!statMulti.containsKey(stat)) {
+                            statMulti.put(stat, value);
+                        } else {
+                            double old = statMulti.get(stat);
+                            statMulti.put(stat, old + value);
+                        }
+                    }
+                }
+
+                for (Stat stat : Stat.values()) {
+
+                    if (baseStats.containsKey(stat)) {
+
+                        double baseValue = baseStats.get(stat);
+
+                        if (statMulti.containsKey(stat)) {
+                            baseValue = baseValue + baseValue * statMulti.get(stat);
+                        }
+
+                        addStat(stat, baseValue);
+                    }
+                }
             }
+        }
+
+        for (Stat stat : stats.keySet()) {
+            Bukkit.getLogger().info(stat.string + " " + stats.get(stat));
         }
     }
 
@@ -163,6 +217,21 @@ public class Item {
 
     private List<Component> createDescription() {
         List<Component> description = new ArrayList<>();
+
+        // stats
+
+        for (Stat stat : stats.keySet()) {
+
+            double value = stats.get(stat);
+
+            if (value >= 0) {
+                description.add(Component.text("+" + value + " " + stat.string).color(stat.color).decoration(TextDecoration.ITALIC, false));
+            } else {
+                description.add(Component.text("-" + value + " " + stat.string).color(stat.color).decoration(TextDecoration.ITALIC, false));
+            }
+        }
+
+        description.add(Component.text(""));
 
         // cycle through 5 times making a new component for each
         // in each component cycle through 5 times adding the character

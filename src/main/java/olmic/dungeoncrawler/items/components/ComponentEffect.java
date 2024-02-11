@@ -1,34 +1,28 @@
 package olmic.dungeoncrawler.items.components;
 
-import olmic.dungeoncrawler.stats.ComponentStat;
+import olmic.dungeoncrawler.stats.Stat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ComponentEffect {
 
-    private ComponentStat stat;
+    private Stat stat;
     private Double value;
     private ArrayList<Direction> directions;
+    private Operation operation;
 
-    private List<ComponentStat> multiStats = Arrays.asList(new ComponentStat[] {
-            ComponentStat.CooldownMulti,
-            ComponentStat.MagicDamageMulti,
-            ComponentStat.MeleeDamageMulti,
-            ComponentStat.RangedDamageMulti
-    });
-
-    ComponentEffect(ComponentStat stat, Double value, ArrayList<Direction> directions) {
+    ComponentEffect(Stat stat, Double value, ArrayList<Direction> directions, Operation operation) {
         this.stat = stat;
         this.value = value;
         this.directions = directions;
+        this.operation = operation;
     }
 
-    public ComponentStat getStat() {
+    public Stat getStat() {
         return stat;
     }
-    public void setStat(ComponentStat stat) {
+    public void setStat(Stat stat) {
         this.stat = stat;
     }
     public Double getValue() {
@@ -38,10 +32,10 @@ public class ComponentEffect {
 
         String end = "";
 
-        if (multiStats.contains(stat)) {
-            end += value * 100 + "%";
-        } else {
+        if (operation == Operation.ADD) {
             end += value.toString();
+        } else {
+            end += value * 100 + "%";
         }
 
         if (value >= 0) {

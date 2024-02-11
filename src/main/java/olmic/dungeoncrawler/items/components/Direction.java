@@ -11,4 +11,19 @@ public enum Direction {
     Direction(String descName) {
         this.descName = descName;
     }
+
+    public static Direction getOppositeDirection(Direction direction) {
+        switch (direction) {
+            case UP:
+                return DOWN;
+            case DOWN:
+                return UP;
+            case RIGHT:
+                return LEFT;
+            case LEFT:
+                return RIGHT;
+            default:
+                return null;
+        }
+    }
 }

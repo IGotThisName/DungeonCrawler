@@ -1,7 +1,7 @@
 package olmic.dungeoncrawler.items.components;
 
 import olmic.dungeoncrawler.DungeonCrawler;
-import olmic.dungeoncrawler.stats.ComponentStat;
+import olmic.dungeoncrawler.stats.Stat;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -51,9 +51,11 @@ public class ComponentManager {
                 String effectPath = key + ".effects." + effectKey;
 
                 // effect stat
-                ComponentStat stat = ComponentStat.valueOf(config.getString(effectPath + ".stat"));
+                Stat stat = Stat.valueOf(config.getString(effectPath + ".stat"));
                 // effect value
                 Double value = config.getDouble(effectPath + ".value");
+                // effect operation
+                Operation operation = Operation.valueOf(config.getString(effectPath + ".operation"));
                 // get directions
                 List<String> directionsStrings = config.getStringList(effectPath + ".direction");
                 ArrayList<Direction> directions = new ArrayList<>();
@@ -63,7 +65,7 @@ public class ComponentManager {
                 }
 
                 // build and add effect
-                ComponentEffect effect = new ComponentEffect(stat, value, directions);
+                ComponentEffect effect = new ComponentEffect(stat, value, directions, operation);
                 effects.add(effect);
             }
 

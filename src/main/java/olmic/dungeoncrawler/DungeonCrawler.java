@@ -53,7 +53,7 @@ public final class DungeonCrawler extends JavaPlugin {
 
 
 
-        // Utils.showComponentInv(Bukkit.getPlayer("olmic"));
+        Utils.showComponentInv(Bukkit.getPlayer("olmic"));
     }
 
     @Override

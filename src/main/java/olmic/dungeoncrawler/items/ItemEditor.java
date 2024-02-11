@@ -113,6 +113,8 @@ public class ItemEditor implements Listener {
                     event.setCancelled(true);
                 }
 
+                item.updateStats();
+
                 player.getInventory().setItemInMainHand(item.getItemStack());
                 inv.setItem(49, item.getItemStack());
 

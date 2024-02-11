@@ -2,13 +2,7 @@ package olmic.dungeoncrawler.items.items;
 
 
 import olmic.dungeoncrawler.DungeonCrawler;
-import olmic.dungeoncrawler.stats.PlayerStat;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
 public class ItemManager {

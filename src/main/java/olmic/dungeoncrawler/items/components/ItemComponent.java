@@ -29,6 +29,10 @@ public class ItemComponent {
         this.key = key;
     }
 
+    public List<ComponentEffect> getEffects() {
+        return effects;
+    }
+
     public ItemStack getItemStack() {
 
         ItemStack item = new ItemStack(material);

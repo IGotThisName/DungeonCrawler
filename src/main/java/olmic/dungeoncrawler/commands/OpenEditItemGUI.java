@@ -23,9 +23,12 @@ import java.util.HashMap;
 
 public class OpenEditItemGUI implements CommandExecutor {
 
+    public OpenEditItemGUI(DungeonCrawler dungeonCrawler) {
+        this.dungeonCrawler = dungeonCrawler;
+    }
+
+    private DungeonCrawler dungeonCrawler;
     private static final HashMap<Integer, Integer> slotMap = new HashMap<>();
-    private ItemManager itemManager = DungeonCrawler.itemManager;
-    private ComponentManager componentManager = DungeonCrawler.componentManager;
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -60,6 +63,9 @@ public class OpenEditItemGUI implements CommandExecutor {
         if (!label.equalsIgnoreCase("openEditItemGUI")) { return false; }
 
         Player player = (Player) sender;
+
+        ItemManager itemManager = dungeonCrawler.getItemManager();
+        ComponentManager componentManager = dungeonCrawler.getComponentManager();
 
         if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
             player.sendMessage("please hold an item dumbass");

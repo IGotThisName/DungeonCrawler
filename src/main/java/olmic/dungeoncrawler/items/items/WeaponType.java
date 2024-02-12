@@ -8,14 +8,15 @@ import org.bukkit.Material;
 public enum WeaponType {
 
     SHORTSWORD(Material.IRON_SWORD,
-            Component.text("Shortsword").decoration(TextDecoration.ITALIC, false).color(TextColor.color(255, 255, 0)));
+            Component.text("Shortsword").decoration(TextDecoration.ITALIC, false).color(TextColor.color(195, 161, 0))),
+    WAND(Material.STICK,
+            Component.text("Wand").decoration(TextDecoration.ITALIC, false).color(TextColor.color(155, 0, 155)));
 
-    private Material material;
-    private Component itemName;
+    public Material material;
+    public Component itemName;
 
     WeaponType(Material material, Component itemName) {
         this.material = material;
         this.itemName = itemName;
     }
-
 }

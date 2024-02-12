@@ -5,23 +5,34 @@ import net.kyori.adventure.text.format.TextDecoration;
 import olmic.dungeoncrawler.DungeonCrawler;
 import olmic.dungeoncrawler.items.items.Item;
 import olmic.dungeoncrawler.items.items.ItemManager;
+import olmic.dungeoncrawler.items.items.WeaponType;
 import olmic.dungeoncrawler.util.NBTutil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
-public class GiveBlankItem implements CommandExecutor {
+public class GiveBlankItem implements CommandExecutor, TabCompleter {
 
-    private final ItemManager itemManager = DungeonCrawler.itemManager;
+    public GiveBlankItem(DungeonCrawler dungeonCrawler) {
+        this.dungeonCrawler = dungeonCrawler;
+    }
+
+    private DungeonCrawler dungeonCrawler;
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -31,55 +42,42 @@ public class GiveBlankItem implements CommandExecutor {
 
         if (!label.equalsIgnoreCase("giveBlankItem")) { return false; }
 
-        Material type = null;
-        String name = "";
+        WeaponType type;
         String uuid = UUID.randomUUID().toString();
 
-        if (args.length <= 1) {
-            sender.sendMessage("no item type");
-            return false;
-        }
-
         try {
-            type = Material.getMaterial(args[0]);
+            type = WeaponType.valueOf(args[0]);
         } catch(IllegalArgumentException e) {
-            player.sendMessage(ChatColor.RED + "Illegal item type");
+            player.sendMessage(ChatColor.RED + "Illegal weapon type");
             return false;
         }
 
-        // return if too short
-        if (args.length < 2) {
-            sender.sendMessage("no item name");
-            return false;
-        }
-
-        for (int i = 1; i < args.length - 1; i++) {
-            name += args[i] + " ";
-        }
-        name += args[args.length-1];
-
-        Item blankItem = Item.createEmpty(type, name, uuid);
-        itemManager.items.put(uuid, blankItem);
+        Item blankItem = Item.createEmpty(type, uuid, dungeonCrawler);
+        dungeonCrawler.getItemManager().items.put(uuid, blankItem);
         ItemStack newItem = blankItem.getItemStack();
 
-        /* ItemStack newItem = new ItemStack(type);
-        ItemMeta meta = newItem.getItemMeta();
-
-        // modify meta
-        meta.lore(Item.createDescription(blankItem));
-        meta.displayName(Component.text(name).decoration(TextDecoration.ITALIC, false));
-
-        // set item meta
-        newItem.setItemMeta(meta);
-        // set tags
-        newItem = NBTutil.setNBT(newItem, "customItem", uuid);
-
-        for (int i = 0; i < 25; i++) {
-            newItem = NBTutil.setNBT(newItem, String.valueOf(i), blankItem.getSlotKey(i));
-        } */
-        // give item
         player.getInventory().addItem(newItem);
 
         return true;
+    }
+
+    // tab completion
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+
+        final List<String> completions = new ArrayList<>();
+
+        List<String> commands = new ArrayList<>();
+
+        if (args.length == 1) {
+            for (WeaponType type : WeaponType.values()) {
+                commands.add(type.toString());
+            }
+        }
+
+        StringUtil.copyPartialMatches(args[0], commands, completions);
+        //sort the list
+        Collections.sort(completions);
+        return completions;
     }
 }

@@ -20,7 +20,11 @@ import java.util.HashMap;
 
 public class ItemEditor implements Listener {
 
-    private ItemManager itemManager = DungeonCrawler.itemManager;
+    public ItemEditor(DungeonCrawler dungeonCrawler) {
+        this.dungeonCrawler= dungeonCrawler;
+    }
+
+    private DungeonCrawler dungeonCrawler;
 
     private static final HashMap<Integer, Integer> slotMap = new HashMap<>();
 
@@ -52,8 +56,17 @@ public class ItemEditor implements Listener {
         slotMap.put(41, 23);
         slotMap.put(42, 24);
 
-        TextComponent textName = (TextComponent) event.getView().title();
-        String name = textName.content();
+        ItemManager itemManager = dungeonCrawler.getItemManager();
+
+        String name;
+
+        try {
+            TextComponent textName = (TextComponent) event.getView().title();
+            name = textName.content();
+        } catch (Exception e) {
+            name = "";
+        }
+
         Player player = (Player) event.getWhoClicked();
         if (name.equalsIgnoreCase("Item Editor")) {
 
@@ -68,12 +81,11 @@ public class ItemEditor implements Listener {
             if (event.getRawSlot() >= inv.getSize()) {
                 // bottom inv
 
-
                 if (NBTutil.getNBT(slotItem, "component") != "") {
                     // item in slot is component, allow event
                     event.setCancelled(false);
                 }
-                else if (NBTutil.getNBT(cursorItem, "component") != "" && slotItem.getType() == Material.AIR) {
+                else if (NBTutil.getNBT(cursorItem, "component") != "" && slotItem == null) {
                     // putting held item into empty slot, allow event
                     event.setCancelled(false);
                 }

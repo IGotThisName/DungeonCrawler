@@ -2,8 +2,11 @@ package olmic.dungeoncrawler.stats;
 
 import net.kyori.adventure.text.TextComponent;
 import olmic.dungeoncrawler.DungeonCrawler;
+import olmic.dungeoncrawler.items.components.ComponentManager;
 import olmic.dungeoncrawler.items.components.ItemComponent;
 import olmic.dungeoncrawler.items.items.Item;
+import olmic.dungeoncrawler.items.items.ItemManager;
+import olmic.dungeoncrawler.items.items.WeaponType;
 import olmic.dungeoncrawler.util.Keys;
 import olmic.dungeoncrawler.util.NBTutil;
 import org.bukkit.Bukkit;
@@ -12,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -23,23 +27,25 @@ import java.util.HashMap;
 
 public class ProfileManager implements Listener {
 
-    public HashMap<Player, PlayerProfile> playerProfiles;
+    private HashMap<Player, PlayerProfile> playerProfiles;
 
-    public ProfileManager() {
+    public ProfileManager(DungeonCrawler dungeonCrawler) {
         playerProfiles = new HashMap<Player, PlayerProfile>();
+        this.dungeonCrawler = dungeonCrawler;
     }
+
+    private DungeonCrawler dungeonCrawler;
 
     public void InitialisePlayer(Player player) {
 
-        PlayerProfile profile = new PlayerProfile();
+        PlayerProfile profile = new PlayerProfile(player, dungeonCrawler);
 
         // modify profile to add stats
 
-
         PlayerInventory playerInv = player.getInventory();
 
-        HashMap<String, ItemComponent> components = DungeonCrawler.componentManager.components;
-        HashMap<String, Item> items = DungeonCrawler.itemManager.items;
+        HashMap<String, ItemComponent> components = dungeonCrawler.getComponentManager().components;
+        HashMap<String, Item> items = dungeonCrawler.getItemManager().items;
 
         for (int i = 0; i < playerInv.getSize(); i++) {
 
@@ -66,16 +72,15 @@ public class ProfileManager implements Listener {
                     Bukkit.getLogger().info("FOUND/UPDATED ITEM");
 
                     String key = NBTutil.getNBT(item, "customItem");
-                    Material material = item.getType();
-                    TextComponent textName = (TextComponent) item.getItemMeta().displayName();
-                    String name = textName.content();
                     ArrayList<String> itemComponents = new ArrayList<>();
 
                     for (int n = 0; n < 25; n++) {
                         itemComponents.add(NBTutil.getNBT(item, String.valueOf(n)));
                     }
 
-                    Item customItem = new Item(material, name, itemComponents, key);
+                    WeaponType type = WeaponType.valueOf(NBTutil.getNBT(item, "weaponType"));
+
+                    Item customItem = new Item(type, itemComponents, key, dungeonCrawler);
                     items.put(key, customItem);
 
                     playerInv.setItem(i, customItem.getItemStack());
@@ -91,5 +96,16 @@ public class ProfileManager implements Listener {
         Player player = event.getPlayer();
 
         InitialisePlayer(player);
+    }
+
+    @EventHandler
+    public void PlayerLeaveEvent(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+
+        playerProfiles.remove(player);
+    }
+
+    public HashMap<Player, PlayerProfile> getPlayerProfiles() {
+        return playerProfiles;
     }
 }

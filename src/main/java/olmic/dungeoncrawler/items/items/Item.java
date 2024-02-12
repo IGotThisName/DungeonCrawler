@@ -21,36 +21,26 @@ import static olmic.dungeoncrawler.items.components.Direction.getOppositeDirecti
 
 public class Item {
 
-    private ComponentManager componentManager = DungeonCrawler.componentManager;
+    private DungeonCrawler dungeonCrawler;
 
-    private Material material;
-    private String name;
+    private WeaponType type;
     private HashMap<Stat, Double> stats;
     private ArrayList<String> components;
     private String uuid;
 
-    public Item(Material material, String name, ArrayList<String> components, String uuid) {
-        this.material = material;
-        this.name = name;
+    public Item(WeaponType type, ArrayList<String> components, String uuid, DungeonCrawler dungeonCrawler) {
         this.components = components;
         this.uuid = uuid;
+        this.type = type;
+        this.dungeonCrawler = dungeonCrawler;
 
         stats = new HashMap<>();
 
         updateStats();
     }
 
-    public Material getMaterial() {
-        return material;
-    }
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
+    public WeaponType getType() {
+        return type;
     }
     public HashMap<Stat, Double> getStats() {
         return stats;
@@ -95,6 +85,7 @@ public class Item {
                     }
                     else {
 
+                        ComponentManager componentManager = dungeonCrawler.getComponentManager();
                         ItemComponent otherComponent = componentManager.components.get(otherKey);
 
                         Direction oppDir = getOppositeDirection(direction);
@@ -187,7 +178,7 @@ public class Item {
         return components.get(getSlot);
     }
 
-    public static Item createEmpty(Material material, String name, String uuid) {
+    public static Item createEmpty(WeaponType type, String uuid, DungeonCrawler dungeonCrawler) {
 
         ArrayList<String> components = new ArrayList<>();
 
@@ -199,7 +190,7 @@ public class Item {
             }
         }
 
-        return new Item(material, name, components, uuid);
+        return new Item(type, components, uuid, dungeonCrawler);
     }
 
     private enum ComponentChar {
@@ -264,17 +255,18 @@ public class Item {
     }
 
     public ItemStack getItemStack() {
-        ItemStack newItem = new ItemStack(material);
+        ItemStack newItem = new ItemStack(type.material);
         ItemMeta meta = newItem.getItemMeta();
 
         // modify meta
         meta.lore(createDescription());
-        meta.displayName(Component.text(name).decoration(TextDecoration.ITALIC, false));
+        meta.displayName(type.itemName);
 
         // set item meta
         newItem.setItemMeta(meta);
         // set tags
         newItem = NBTutil.setNBT(newItem, "customItem", uuid);
+        newItem = NBTutil.setNBT(newItem, "weaponType", type.toString());
 
         for (int i = 0; i < 25; i++) {
             newItem = NBTutil.setNBT(newItem, String.valueOf(i), components.get(i));

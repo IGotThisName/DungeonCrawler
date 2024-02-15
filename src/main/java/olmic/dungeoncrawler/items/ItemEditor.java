@@ -4,6 +4,7 @@ import net.kyori.adventure.text.TextComponent;
 import olmic.dungeoncrawler.DungeonCrawler;
 import olmic.dungeoncrawler.items.items.Item;
 import olmic.dungeoncrawler.items.items.ItemManager;
+import olmic.dungeoncrawler.stats.ProfileManager;
 import olmic.dungeoncrawler.util.GUITEM;
 import olmic.dungeoncrawler.util.NBTutil;
 import org.bukkit.Material;
@@ -57,6 +58,7 @@ public class ItemEditor implements Listener {
         slotMap.put(42, 24);
 
         ItemManager itemManager = dungeonCrawler.getItemManager();
+        ProfileManager profileManager = dungeonCrawler.getProfileManager();
 
         String name;
 
@@ -129,6 +131,8 @@ public class ItemEditor implements Listener {
 
                 player.getInventory().setItemInMainHand(item.getItemStack());
                 inv.setItem(49, item.getItemStack());
+
+                profileManager.getPlayerProfiles().get(player).updateStats();
 
                 itemManager.items.put(NBTutil.getNBT(inv.getItem(49), "customItem"), item);
             }

@@ -8,8 +8,8 @@ import org.bukkit.Bukkit;
 
 public class WandAttacks extends Attacks {
 
-    public WandAttacks(WeaponType type, DungeonCrawler dungeonCrawler) {
-        super(type, dungeonCrawler);
+    public WandAttacks(WeaponType type, DungeonCrawler dungeonCrawler, PlayerProfile profile) {
+        super(type, dungeonCrawler, profile);
     }
 
     @Override

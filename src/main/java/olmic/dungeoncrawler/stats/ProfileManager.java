@@ -1,16 +1,11 @@
 package olmic.dungeoncrawler.stats;
 
-import net.kyori.adventure.text.TextComponent;
 import olmic.dungeoncrawler.DungeonCrawler;
-import olmic.dungeoncrawler.items.components.ComponentManager;
 import olmic.dungeoncrawler.items.components.ItemComponent;
 import olmic.dungeoncrawler.items.items.Item;
-import olmic.dungeoncrawler.items.items.ItemManager;
 import olmic.dungeoncrawler.items.items.WeaponType;
-import olmic.dungeoncrawler.util.Keys;
 import olmic.dungeoncrawler.util.NBTutil;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,10 +14,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
 
 public class ProfileManager implements Listener {
@@ -88,6 +81,7 @@ public class ProfileManager implements Listener {
             }
         }
 
+        profile.updateStats();
         playerProfiles.put(player, profile);
     }
 

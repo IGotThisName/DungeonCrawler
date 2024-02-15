@@ -29,6 +29,11 @@ public class PlayerProfile {
         for (Stat stat : Stat.values()) {
             stats.put(stat, 0d);
         }
+
+        Bukkit.getPluginManager().registerEvents(new SwordAttacks(WeaponType.SHORTSWORD, dungeonCrawler, this),
+                dungeonCrawler.plugin);
+        Bukkit.getPluginManager().registerEvents(new WandAttacks(WeaponType.WAND, dungeonCrawler, this),
+                dungeonCrawler.plugin);
     }
 
 

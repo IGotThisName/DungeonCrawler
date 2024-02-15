@@ -1,17 +1,13 @@
 package olmic.dungeoncrawler;
 
-import olmic.dungeoncrawler.attacks.shortsword.SwordAttacks;
-import olmic.dungeoncrawler.attacks.wand.WandAttacks;
 import olmic.dungeoncrawler.commands.GiveBlankItem;
 import olmic.dungeoncrawler.commands.OpenEditItemGUI;
 import olmic.dungeoncrawler.enemies.EnemyManager;
 import olmic.dungeoncrawler.items.ItemEditor;
 import olmic.dungeoncrawler.items.items.ItemManager;
 import olmic.dungeoncrawler.items.components.ComponentManager;
-import olmic.dungeoncrawler.items.items.WeaponType;
 import olmic.dungeoncrawler.stats.ProfileManager;
 import olmic.dungeoncrawler.stats.StatsListener;
-import olmic.dungeoncrawler.util.Keys;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -19,14 +15,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class DungeonCrawler extends JavaPlugin {
 
-    public static Plugin plugin;
+    public Plugin plugin;
 
     private ItemManager itemManager;
     private ComponentManager componentManager;
     private ProfileManager profileManager;
     private EnemyManager enemyManager;
-
-    public Keys keys;
 
     @Override
     public void onEnable() {
@@ -54,8 +48,7 @@ public final class DungeonCrawler extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new StatsListener(this), this);
 
         // attack events
-        Bukkit.getPluginManager().registerEvents(new SwordAttacks(WeaponType.SHORTSWORD, this), this);
-        Bukkit.getPluginManager().registerEvents(new WandAttacks(WeaponType.WAND, this), this);
+
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             profileManager.InitialisePlayer(player);

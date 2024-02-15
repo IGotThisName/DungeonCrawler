@@ -19,7 +19,7 @@ public class StatsListener implements Listener {
 
     @EventHandler
     public void swapHand(PlayerItemHeldEvent event) {
-        Bukkit.getScheduler().runTaskLater(DungeonCrawler.plugin, new Runnable() {
+        Bukkit.getScheduler().runTaskLater(dungeonCrawler.plugin, new Runnable() {
             @Override
             public void run() {
                 Player player = event.getPlayer();

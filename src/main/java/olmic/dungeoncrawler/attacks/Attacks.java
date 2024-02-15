@@ -5,6 +5,7 @@ import olmic.dungeoncrawler.items.items.Item;
 import olmic.dungeoncrawler.items.items.ItemManager;
 import olmic.dungeoncrawler.items.items.WeaponType;
 import olmic.dungeoncrawler.stats.PlayerProfile;
+import olmic.dungeoncrawler.stats.Stat;
 import olmic.dungeoncrawler.util.NBTutil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,25 +15,35 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class Attacks implements Listener {
     protected Player player;
+    protected PlayerProfile profile;
 
     protected int cooldown = 0;
 
     private DungeonCrawler dungeonCrawler;
     private WeaponType type;
-    private PlayerProfile profile;
 
-    public Attacks(WeaponType type, DungeonCrawler dungeonCrawler) {
+    public Attacks(WeaponType type, DungeonCrawler dungeonCrawler, PlayerProfile profile) {
         this.type = type;
         this.dungeonCrawler = dungeonCrawler;
+        this.profile = profile;
+        this.player = profile.getPlayer();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (cooldown > 0) {
+                    cooldown--;
+                }
+            }
+        }.runTaskTimer(dungeonCrawler.plugin, 0, 1);
     }
 
     @EventHandler
     public void playerClick(PlayerInteractEvent event) {
-        player = event.getPlayer();
-        profile = dungeonCrawler.getProfileManager().getPlayerProfiles().get(player);
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
@@ -46,8 +57,6 @@ public abstract class Attacks implements Listener {
         } else {
             return;
         }
-
-        player.sendMessage("interacted");
 
         ItemStack mainHand;
 
@@ -74,7 +83,8 @@ public abstract class Attacks implements Listener {
     }
 
     protected void SetCooldown(int ticks) {
-        cooldown = ticks;
+        cooldown = (int) Math.ceil(ticks * Math.pow(1.01, -profile.getStat(Stat.AttackSpeed)));
+        player.sendMessage(String.valueOf(cooldown));
     }
 
     protected abstract void LeftAttack();

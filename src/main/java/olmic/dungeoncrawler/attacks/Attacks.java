@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -21,9 +23,10 @@ public abstract class Attacks implements Listener {
     protected Player player;
     protected PlayerProfile profile;
 
-    protected int cooldown = 0;
+    protected int rCooldown = 0;
+    protected int lCooldown = 0;
 
-    private DungeonCrawler dungeonCrawler;
+    protected DungeonCrawler dungeonCrawler;
     private WeaponType type;
 
     public Attacks(WeaponType type, DungeonCrawler dungeonCrawler, PlayerProfile profile) {
@@ -35,8 +38,11 @@ public abstract class Attacks implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (cooldown > 0) {
-                    cooldown--;
+                if (rCooldown > 0) {
+                    rCooldown--;
+                }
+                if (lCooldown > 0) {
+                    lCooldown--;
                 }
             }
         }.runTaskTimer(dungeonCrawler.plugin, 0, 1);
@@ -44,7 +50,7 @@ public abstract class Attacks implements Listener {
 
     @EventHandler
     public void playerClick(PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) {
+        if (event.getHand() != EquipmentSlot.HAND || event.getPlayer() != player) {
             return;
         }
 
@@ -74,17 +80,57 @@ public abstract class Attacks implements Listener {
 
             if (item.getType() == type) {
                 if (attack == 0) {
-                    LeftAttack();
+                    if (lCooldown < 1) {
+                        LeftAttack();
+                    }
                 } else {
-                    RightAttack();
+                    if (rCooldown < 1) {
+                        RightAttack();
+                    }
                 }
             }
         }
     }
 
-    protected void SetCooldown(int ticks) {
-        cooldown = (int) Math.ceil(ticks * Math.pow(1.01, -profile.getStat(Stat.AttackSpeed)));
-        player.sendMessage(String.valueOf(cooldown));
+    @EventHandler
+    public void hitEntity(EntityDamageByEntityEvent event){
+
+        if (!(event.getDamager() instanceof Player)) {
+            return;
+        }
+
+        Player eventPlayer = (Player) event.getDamager();
+
+        if (eventPlayer != player) {
+            return;
+        }
+
+        ItemStack mainHand;
+
+        try {
+            mainHand = player.getInventory().getItemInMainHand();
+        } catch (Exception e) {
+            mainHand = null;
+        }
+
+        String mainHandKey = NBTutil.getNBT(mainHand, "customItem");
+
+        if (mainHand != null && mainHandKey != "") {
+            ItemManager itemManager = dungeonCrawler.getItemManager();
+            Item item = itemManager.items.get(mainHandKey);
+
+            if (item.getType() == type) {
+                LeftAttack();
+            }
+        }
+    }
+
+    protected void SetRCooldown(int ticks) {
+        rCooldown = (int) Math.ceil(ticks * Math.pow(1.007, -profile.getStat(Stat.AttackSpeed)));
+    }
+
+    protected void SetLCooldown(int ticks) {
+        lCooldown = (int) Math.ceil(ticks * Math.pow(1.007, -profile.getStat(Stat.AttackSpeed)));
     }
 
     protected abstract void LeftAttack();

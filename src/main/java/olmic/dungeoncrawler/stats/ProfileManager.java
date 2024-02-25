@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -97,6 +98,13 @@ public class ProfileManager implements Listener {
         Player player = event.getPlayer();
 
         playerProfiles.remove(player);
+    }
+
+    @EventHandler
+    public void PlayerRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+
+        playerProfiles.get(player).ResetHealth();
     }
 
     public HashMap<Player, PlayerProfile> getPlayerProfiles() {

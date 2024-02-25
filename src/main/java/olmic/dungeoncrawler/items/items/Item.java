@@ -107,6 +107,12 @@ public class Item {
                 HashMap<Stat, Double> baseStats = new HashMap<>();
                 HashMap<Stat, Double> statMulti = new HashMap<>();
 
+                if (componentKey.equalsIgnoreCase("core")) {
+                    for (Stat stat : type.baseStats.keySet()) {
+                        baseStats.put(stat, type.baseStats.get(stat));
+                    }
+                }
+
                 for (ComponentEffect effect : appliedEffects) {
 
                     Stat stat = effect.getStat();
@@ -271,6 +277,33 @@ public class Item {
         for (int i = 0; i < 25; i++) {
             newItem = NBTutil.setNBT(newItem, String.valueOf(i), components.get(i));
         }
+
+        return newItem;
+    }
+
+    public ItemStack getCoreItem() {
+        ItemStack newItem = new ItemStack(Material.ORANGE_STAINED_GLASS_PANE);
+        ItemMeta meta = newItem.getItemMeta();
+
+        // modify meta
+        ArrayList<Component> lore = new ArrayList<>();
+
+        for (Stat stat : type.baseStats.keySet()) {
+            double value = type.baseStats.get(stat);
+
+            if (value >= 0) {
+                lore.add(Component.text("+" + value + " " + stat.string).color(stat.color).decoration(TextDecoration.ITALIC, false));
+            } else {
+                lore.add(Component.text("-" + value + " " + stat.string).color(stat.color).decoration(TextDecoration.ITALIC, false));
+            }
+        }
+
+        meta.lore(lore);
+        meta.displayName(Component.text("Core").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD,
+                true));
+
+        // set meta
+        newItem.setItemMeta(meta);
 
         return newItem;
     }

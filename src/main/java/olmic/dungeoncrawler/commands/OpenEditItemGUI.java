@@ -104,7 +104,7 @@ public class OpenEditItemGUI implements CommandExecutor {
         }
 
         inv.setItem(49, heldItem);
-        inv.setItem(22, GUITEM.CORE.item);
+        inv.setItem(22, item.getCoreItem());
 
         player.openInventory(inv);
 

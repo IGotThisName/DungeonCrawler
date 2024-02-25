@@ -9,3 +9,7 @@ commands:
     description: give a new item from presets
   openEditItemGUI:
     description: open the item editor
+  openComponentGUI:
+    description: get components yay
+  spawnEnemy:
+    description: spawn an enemy

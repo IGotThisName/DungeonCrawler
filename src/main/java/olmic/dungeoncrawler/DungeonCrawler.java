@@ -1,7 +1,10 @@
 package olmic.dungeoncrawler;
 
 import olmic.dungeoncrawler.commands.GiveBlankItem;
+import olmic.dungeoncrawler.commands.OpenComponentGUI;
 import olmic.dungeoncrawler.commands.OpenEditItemGUI;
+import olmic.dungeoncrawler.commands.SpawnEnemy;
+import olmic.dungeoncrawler.enemies.DamageListener;
 import olmic.dungeoncrawler.enemies.EnemyManager;
 import olmic.dungeoncrawler.items.ItemEditor;
 import olmic.dungeoncrawler.items.items.ItemManager;
@@ -41,11 +44,14 @@ public final class DungeonCrawler extends JavaPlugin {
         // register commands
         getCommand("giveBlankItem").setExecutor(new GiveBlankItem(this));
         getCommand("openEditItemGUI").setExecutor(new OpenEditItemGUI(this));
+        getCommand("openComponentGUI").setExecutor(new OpenComponentGUI(this));
+        getCommand("spawnEnemy").setExecutor(new SpawnEnemy(this));
 
         // register events
         getServer().getPluginManager().registerEvents(new ItemEditor(this), this);
         getServer().getPluginManager().registerEvents(profileManager, this);
         getServer().getPluginManager().registerEvents(new StatsListener(this), this);
+        getServer().getPluginManager().registerEvents(new DamageListener(this), this);
 
         // attack events
 
@@ -57,6 +63,9 @@ public final class DungeonCrawler extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
+        enemyManager.KillAll();
+
         // Plugin shutdown logic
 
         // itemManager.SaveItems();

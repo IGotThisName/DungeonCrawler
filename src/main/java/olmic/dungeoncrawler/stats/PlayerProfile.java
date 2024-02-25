@@ -18,6 +18,9 @@ public class PlayerProfile {
 
     private HashMap<Stat, Double> stats;
 
+    private double health;
+    private double maxHealth;
+
     private Player player;
     private DungeonCrawler dungeonCrawler;
 
@@ -25,6 +28,8 @@ public class PlayerProfile {
         stats = new HashMap<Stat, Double>();
         this.dungeonCrawler = dungeonCrawler;
         this.player = player;
+        this.maxHealth = 20;
+        this.health = maxHealth;
 
         for (Stat stat : Stat.values()) {
             stats.put(stat, 0d);
@@ -91,5 +96,25 @@ public class PlayerProfile {
                 addStat(stat, itemStats.get(stat));
             }
         }
+
+        if (stats.get(Stat.AttackSpeed) > 200) {
+            stats.put(Stat.AttackSpeed, 200d);
+        }
+    }
+
+    public void Damage(double damage) {
+        health -= damage;
+
+        player.damage(0.1);
+
+        if (health > 0) {
+            player.setHealth(health);
+        } else {
+            player.setHealth(0);
+        }
+    }
+
+    public void ResetHealth() {
+        health = maxHealth;
     }
 }
